@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>📚 Inscrição em Cursos de Informática - SENAC COARI - AM</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { 
+      font-family: Arial, sans-serif; 
+      margin: 0; 
+      padding: 0;
+      background: linear-gradient(rgba(10, 10, 20, 0.6), rgba(10, 10, 20, 0.6)), 
+                  url('Escola-Interativa.jpg') no-repeat center center fixed;
+      background-size: cover;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 40px 16px;
+    }
+
+    .container { 
+      max-width: 520px; 
+      width: 100%;
+      background: rgba(255, 255, 255, 0.95); 
+      padding: 32px 28px 24px 28px; 
+      border-radius: 12px; 
+      box-shadow: 0 2px 16px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+
+    h1 { 
+      text-align: center; 
+      margin-bottom: 18px; 
+      font-size: 1.6em;
+    }
+
+    h1 span {
+      font-size: 0.7em;
+      font-weight: normal;
+      color: #555;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      text-align: left;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    label { 
+      font-weight: bold; 
+      margin-bottom: 2px;
+    }
+
+    input, select, textarea { 
+      width: 100%; 
+      padding: 9px 10px; 
+      border: 1px solid #ccc; 
+      border-radius: 4px; 
+      font-size: 1em;
+      box-sizing: border-box;
+      margin-bottom: 0;
+    }
+
+    .checkbox-group, .radio-group { 
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 0;
+      padding-left: 8px;
+    }
+
+    .checkbox-group label, .radio-group label { 
+      font-weight: normal; 
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .checkbox-group input[type="checkbox"], .radio-group input[type="radio"] {
+      accent-color: #0078d7;
+      width: 18px;
+      height: 18px;
+    }
+
+    button { 
+      margin-top: 10px; 
+      width: 100%; 
+      padding: 14px; 
+      background: #0078d7; 
+      color: #fff; 
+      border: none; 
+      border-radius: 4px; 
+      font-size: 1.1em; 
+      cursor: pointer; 
+      font-weight: bold;
+      letter-spacing: 1px;
+      transition: background 0.2s;
+    }
+
+    button:hover { 
+      background: #005fa3; 
+    }
+
+    .login-btn {
+      display: inline-block;
+      margin-bottom: 20px;
+      padding: 10px 20px;
+      font-size: 1em;
+      background: #28a745;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.2s;
+      text-decoration: none;
+    }
+
+    .login-btn:hover {
+      background: #1e7e34;
+    }
+
+    .optional { 
+      font-weight: normal; 
+      color: #888; 
+      font-size: 0.95em; 
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 16px 4vw;
+      }
+      h1 {
+        font-size: 1.2em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Botão de login centralizado -->
+    <a href="admin-login.html" class="login-btn">🔑 Login do ADMIN</a>
+
+    <h1>📚 Inscrição em Cursos de Informática<br><span>SENAC COARI - AM</span></h1>
+
+    <!-- FORMULÁRIO NETLIFY -->
+    <form name="inscricao" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" id="formInscricao">
+      <!-- Campo escondido para bots -->
+      <input type="hidden" name="form-name" value="inscricao">
+      <input type="text" name="bot-field" style="display:none">
+
+      <!-- Informações Pessoais -->
+      <div class="form-group">
+        <label for="nome">Nome completo: <span style="color:red">*</span></label>
+        <input type="text" id="nome" name="nome" required>
+      </div>
+      <div class="form-group">
+        <label for="nascimento">Data de nascimento: <span style="color:red">*</span></label>
+        <input type="date" id="nascimento" name="nascimento" required>
+      </div>
+      <div class="form-group">
+        <label for="telefone">Telefone para contato (WhatsApp): <span style="color:red">*</span></label>
+        <input type="tel" id="telefone" name="telefone" required pattern="^\(?\d{2}\)? ?\d{4,5}-?\d{4}$" placeholder="(99) 99999-9999">
+      </div>
+      <div class="form-group">
+        <label for="email">E-mail: <span class="optional">(opcional)</span></label>
+        <input type="email" id="email" name="email">
+      </div>
+      <div class="form-group">
+        <label for="cidade">Cidade / Bairro: <span class="optional">(opcional)</span></label>
+        <input type="text" id="cidade" name="cidade">
+      </div>
+
+      <!-- Cursos -->
+      <div class="form-group">
+        <label>💻 Escolha os cursos que deseja se inscrever: <span style="color:red">*</span></label>
+        <div class="checkbox-group">
+          <label><input type="checkbox" name="cursos" value="Windows Básico"> Windows</label>
+          <label><input type="checkbox" name="cursos" value="Microsoft Word"> Word</label>
+          <label><input type="checkbox" name="cursos" value="Microsoft PowerPoint"> PowerPoint</label>
+          <label><input type="checkbox" name="cursos" value="Digitação"> Digitação</label>
+          <label><input type="checkbox" name="cursos" value="Excel Básico"> Excel</label>
+          <label><input type="checkbox" name="cursos" value="Internet / Navegação Segura"> Internet</label>
+        </div>
+      </div>
+
+      <!-- Turno -->
+      <div class="form-group">
+        <label>🕒 Qual o melhor turno para você? <span style="color:red">*</span></label>
+        <div class="radio-group">
+          <label><input type="radio" name="turno" value="Manhã" required> Manhã</label>
+          <label><input type="radio" name="turno" value="Tarde"> Tarde</label>
+          <label><input type="radio" name="turno" value="Noite"> Noite</label>
+          <label><input type="radio" name="turno" value="Qualquer"> Tenho disponibilidade em qualquer turno</label>
+        </div>
+      </div>
+
+      <!-- Dias da semana -->
+      <div class="form-group">
+        <label>📅 Qual sua disponibilidade de dias da semana? <span style="color:red">*</span></label>
+        <div class="checkbox-group">
+          <label><input type="checkbox" name="dias" value="Segunda-feira"> Segunda-feira</label>
+          <label><input type="checkbox" name="dias" value="Terça-feira"> Terça-feira</label>
+          <label><input type="checkbox" name="dias" value="Quarta-feira"> Quarta-feira</label>
+          <label><input type="checkbox" name="dias" value="Quinta-feira"> Quinta-feira</label>
+          <label><input type="checkbox" name="dias" value="Sexta-feira"> Sexta-feira</label>
+          <label><input type="checkbox" name="dias" value="Sábado"> Sábado</label>
+        </div>
+      </div>
+
+      <!-- Observações -->
+      <div class="form-group">
+        <label for="observacoes">📝 Tem alguma dúvida ou observação?</label>
+        <textarea id="observacoes" name="observacoes" rows="3" placeholder="Digite aqui..."></textarea>
+      </div>
+
+      <!-- Botão de envio -->
+      <button type="submit">ENVIAR INSCRIÇÃO</button>
+    </form>
+  </div>
+</body>
+</html>

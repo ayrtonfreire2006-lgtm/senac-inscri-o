@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Login do Administrador</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f2f5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .login-container {
+      background: #fff;
+      padding: 32px 28px;
+      border-radius: 10px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 360px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    input {
+      width: 100%;
+      padding: 10px 12px;
+      margin-bottom: 14px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1em;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #0078d7;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 1em;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #005fa3;
+    }
+    .error {
+      color: red;
+      font-size: 0.95em;
+      margin-bottom: 10px;
+      display: none;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h2>🔐 Login do Administrador</h2>
+    <div class="error" id="error">Usuário ou senha incorretos.</div>
+    <input type="text" id="username" placeholder="Usuário">
+    <input type="password" id="password" placeholder="Senha">
+    <button onclick="login()">Entrar</button>
+  </div>
+
+  <script>
+    function login() {
+      const user = document.getElementById('username').value.trim();
+      const pass = document.getElementById('password').value.trim();
+
+      if (user === "adm" && pass === "123456") {
+        localStorage.setItem("adminLogado", "sim");
+        window.location.href = "admin-dashboard.html";
+      } else {
+        document.getElementById('error').style.display = 'block';
+      }
+    }
+  </script>
+</body>
+</html>
