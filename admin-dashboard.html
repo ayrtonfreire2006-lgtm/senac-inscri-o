@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Painel do Administrador</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    .header {
+      background-color: #0078d7;
+      color: white;
+      padding: 18px 24px;
+      text-align: center;
+      position: relative;
+    }
+    .logout {
+      position: absolute;
+      right: 24px;
+      top: 18px;
+      color: white;
+      text-decoration: underline;
+      cursor: pointer;
+      font-size: 0.95em;
+    }
+    .content {
+      padding: 24px;
+      max-width: 1100px;
+      margin: auto;
+    }
+    h2 {
+      margin-bottom: 20px;
+    }
+    .filtros {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .filtros input,
+    .filtros select {
+      padding: 10px 12px;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    th,
+    td {
+      padding: 12px 14px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background-color: #f0f0f0;
+    }
+    tr:hover {
+      background-color: #f9f9f9;
+    }
+    .no-data {
+      text-align: center;
+      padding: 20px;
+      color: #999;
+    }
+    .btn-excluir,
+    .btn-editar {
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9em;
+      transition: background-color 0.2s;
+      margin-right: 6px;
+    }
+    .btn-excluir:hover {
+      background-color: #c0392b;
+    }
+    .btn-editar {
+      background-color: #2980b9;
+    }
+    .btn-editar:hover {
+      background-color: #1c5980;
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .modal-overlay.active {
+      display: flex;
+    }
+    .modal {
+      background: white;
+      border-radius: 8px;
+      padding: 24px;
+      max-width: 600px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    }
+    .modal h3 {
+      margin-top: 0;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    .modal form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .modal label {
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+    .modal input[type="text"],
+    .modal input[type="tel"],
+    .modal input[type="email"],
+    .modal input[type="date"],
+    .modal select,
+    .modal textarea {
+      padding: 8px 10px;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      width: 100%;
+    }
+    .modal textarea {
+      resize: vertical;
+    }
+    .modal .btn-group {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .modal button {
+      padding: 10px 18px;
+      font-size: 1em;
+      cursor: pointer;
+      border-radius: 4px;
+      border: none;
+      font-weight: bold;
+      letter-spacing: 1px;
+      transition: background-color 0.2s;
+    }
+    .modal button.save-btn {
+      background-color: #0078d7;
+      color: white;
+    }
+    .modal button.save-btn:hover {
+      background-color: #005fa3;
+    }
+    .modal button.cancel-btn {
+      background-color: #ccc;
+      color: #333;
+    }
+    .modal button.cancel-btn:hover {
+      background-color: #999;
+      color: white;
+    }
+
+    select[multiple] {
+      height: 140px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <span>Painel do Administrador</span>
+    <span class="logout" onclick="logout()">Sair</span>
+  </div>
+
+  <div class="content">
+    <h2>📋 Inscrições Recebidas</h2>
+
+    <!-- Filtros -->
+    <div class="filtros">
+      <input type="text" id="filtroNome" placeholder="🔍 Filtrar por nome..." />
+      <select id="filtroCurso">
+        <option value="">🎓 Filtrar por curso...</option>
+        <option value="Windows Básico">Windows Básico</option>
+        <option value="Microsoft Word">Microsoft Word</option>
+        <option value="Microsoft PowerPoint">Microsoft PowerPoint</option>
+        <option value="Digitação">Digitação</option>
+        <option value="Excel Básico">Excel Básico</option>
+        <option value="Internet / Navegação Segura">Internet / Navegação Segura</option>
+      </select>
+    </div>
+
+    <!-- Tabela -->
+    <table>
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Telefone</th>
+          <th>Curso</th>
+          <th>Turno</th>
+          <th>Dias</th>
+          <th>Enviado em</th>
+          <th>Situação</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="tabelaInscricoes">
+        <!-- Inscrições reais serão carregadas aqui -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Modal de edição -->
+  <div class="modal-overlay" id="modalEdicao">
+    <div class="modal">
+      <h3>Editar Inscrição</h3>
+      <form id="formEdicao">
+        <label for="inputNome">Nome completo:</label>
+        <input type="text" id="inputNome" name="nome" required />
+
+        <label for="inputNascimento">Data de nascimento:</label>
+        <input type="date" id="inputNascimento" name="nascimento" required />
+
+        <label for="inputTelefone">Telefone:</label>
+        <input
+          type="tel"
+          id="inputTelefone"
+          name="telefone"
+          pattern="^\\(?\\d{2}\\)? ?\\d{4,5}-?\\d{4}$"
+          placeholder="(99) 99999-9999"
+          required
+        />
+
+        <label for="inputEmail">E-mail:</label>
+        <input type="email" id="inputEmail" name="email" />
+
+        <label for="inputCidade">Cidade / Bairro:</label>
+        <input type="text" id="inputCidade" name="cidade" />
+
+        <label for="inputCursos">Curso:</label>
+        <select id="inputCursos" name="curso" required>
+          <option value="">Selecione o curso</option>
+          <option value="Windows Básico">Windows Básico</option>
+          <option value="Microsoft Word">Microsoft Word</option>
+          <option value="Microsoft PowerPoint">Microsoft PowerPoint</option>
+          <option value="Digitação">Digitação</option>
+          <option value="Excel Básico">Excel Básico</option>
+          <option value="Internet / Navegação Segura">Internet / Navegação Segura</option>
+        </select>
+
+        <label for="inputTurno">Turno:</label>
+        <select id="inputTurno" name="turno" required>
+          <option value="">Selecione o turno</option>
+          <option value="Manhã">Manhã</option>
+          <option value="Tarde">Tarde</option>
+          <option value="Noite">Noite</option>
+        </select>
+
+        <label>Dias da semana:</label>
+        <div id="inputDias" style="display: flex; gap: 10px;">
+          <label><input type="checkbox" value="Segunda" /> Segunda</label>
+          <label><input type="checkbox" value="Terça" /> Terça</label>
+          <label><input type="checkbox" value="Quarta" /> Quarta</label>
+          <label><input type="checkbox" value="Quinta" /> Quinta</label>
+          <label><input type="checkbox" value="Sexta" /> Sexta</label>
+        </div>
+
+        <label for="inputSituacao">Situação do aluno:</label>
+        <select id="inputSituacao" name="situacao" required>
+          <option value="Em Processo">Em Processo</option>
+          <option value="Aprovado">Aprovado</option>
+          <option value="Desistente">Desistente</option>
+        </select>
+
+        <div class="btn-group">
+          <button type="button" class="cancel-btn" onclick="fecharModal()">Cancelar</button>
+          <button type="submit" class="save-btn">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    if (localStorage.getItem("adminLogado") !== "sim") {
+      window.location.href = "admin-login.html";
+    }
+
+    const filtroNome = document.getElementById("filtroNome");
+    const filtroCurso = document.getElementById("filtroCurso");
+    const tbody = document.getElementById("tabelaInscricoes");
+
+    let inscricoes = [];
+    let indiceEdicao = null;
+
+    // Modal Elements
+    const modalEdicao = document.getElementById("modalEdicao");
+    const formEdicao = document.getElementById("formEdicao");
+    const inputNome = document.getElementById("inputNome");
+    const inputNascimento = document.getElementById("inputNascimento");
+    const inputTelefone = document.getElementById("inputTelefone");
+    const inputEmail = document.getElementById("inputEmail");
+    const inputCidade = document.getElementById("inputCidade");
+    const inputCursos = document.getElementById("inputCursos");
+    const inputTurno = document.getElementById("inputTurno");
+    const inputDias = document.getElementById("inputDias");
+    const inputSituacao = document.getElementById("inputSituacao");
+
+    function carregarInscricoes() {
+      inscricoes = JSON.parse(localStorage.getItem("inscricoes")) || [];
+      exibirInscricoes(inscricoes);
+    }
+
+    function exibirInscricoes(lista) {
+      tbody.innerHTML = "";
+
+      if (lista.length === 0) {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td colspan="8" class="no-data">Nenhuma inscrição encontrada.</td>`;
+        tbody.appendChild(tr);
+        return;
+      }
+
+      lista.forEach((inscricao, index) => {
+        const situacaoExibicao = inscricao.situacao || "Em Processo";
+        const cursoTexto = inscricao.curso || "";
+        const diasTexto = inscricao.dias ? inscricao.dias.join(", ") : "";
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${inscricao.nome}</td>
+          <td>${inscricao.telefone}</td>
+          <td>${cursoTexto}</td>
+          <td>${inscricao.turno || ""}</td>
+          <td>${diasTexto}</td>
+          <td>${inscricao.dataHora || "N/A"}</td>
+          <td>${situacaoExibicao}</td>
+          <td>
+            <button class="btn-editar" onclick="abrirModalEdicao(${index})">Editar</button>
+            <button class="btn-excluir" onclick="excluirInscricao(${index})">Excluir</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function aplicarFiltros() {
+      const nomeFiltro = filtroNome.value.toLowerCase();
+      const cursoFiltro = filtroCurso.value;
+
+      const filtradas = inscricoes.filter((inscricao) => {
+        const nomeCond = inscricao.nome.toLowerCase().includes(nomeFiltro);
+        const cursoCond = cursoFiltro === "" || (inscricao.curso && inscricao.curso === cursoFiltro);
+        return nomeCond && cursoCond;
+      });
+
+      exibirInscricoes(filtradas);
+    }
+
+    function excluirInscricao(index) {
+      if (confirm("Tem certeza que deseja excluir esta inscrição?")) {
+        inscricoes.splice(index, 1);
+        localStorage.setItem("inscricoes", JSON.stringify(inscricoes));
+        aplicarFiltros();
+      }
+    }
+
+    function abrirModalEdicao(index) {
+      indiceEdicao = index;
+      const inscricao = inscricoes[index];
+
+      inputNome.value = inscricao.nome || "";
+      inputNascimento.value = inscricao.nascimento || "";
+      inputTelefone.value = inscricao.telefone || "";
+      inputEmail.value = inscricao.email || "";
+      inputCidade.value = inscricao.cidade || "";
+
+      // Curso (select simples)
+      inputCursos.value = inscricao.curso || "";
+
+      // Turno (select)
+      inputTurno.value = inscricao.turno || "";
+
+      // Dias (checkboxes)
+      Array.from(inputDias.querySelectorAll("input[type=checkbox]")).forEach((checkbox) => {
+        checkbox.checked = inscricao.dias && inscricao.dias.includes(checkbox.value);
+      });
+
+      // Situação
+      inputSituacao.value = inscricao.situacao || "Em Processo";
+
+      modalEdicao.classList.add("active");
+    }
+
+    function fecharModal() {
+      modalEdicao.classList.remove("active");
+      indiceEdicao = null;
+      formEdicao.reset();
+    }
+
+    formEdicao.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      // Validar curso selecionado
+      if (!inputCursos.value) {
+        alert("Selecione um curso.");
+        return;
+      }
+
+      // Validar dias selecionados
+      const diasSelecionados = Array.from(inputDias.querySelectorAll("input[type=checkbox]:checked")).map(
+        (checkbox) => checkbox.value
+      );
+      if (diasSelecionados.length === 0) {
+        alert("Selecione pelo menos um dia da semana.");
+        return;
+      }
+
+      // Atualizar inscrição
+      inscricoes[indiceEdicao] = {
+        ...inscricoes[indiceEdicao], // mantém dataHora e outras info não editáveis
+        nome: inputNome.value.trim(),
+        nascimento: inputNascimento.value,
+        telefone: inputTelefone.value.trim(),
+        email: inputEmail.value.trim(),
+        cidade: inputCidade.value.trim(),
+        curso: inputCursos.value,
+        turno: inputTurno.value,
+        dias: diasSelecionados,
+        situacao: inputSituacao.value,
+      };
+
+      // Atualizar localStorage
+      localStorage.setItem("inscricoes", JSON.stringify(inscricoes));
+
+      aplicarFiltros();
+      fecharModal();
+    });
+
+    filtroNome.addEventListener("input", aplicarFiltros);
+    filtroCurso.addEventListener("change", aplicarFiltros);
+
+    function logout() {
+      localStorage.removeItem("adminLogado");
+      window.location.href = "admin-login.html";
+    }
+
+    // Inicialização
+    carregarInscricoes();
+  </script>
+</body>
+</html>
